@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Maithili Dhiwar - CV with Experience Cards</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+  :root {
+    --dark-blue: #001f3f;
+    --gold: #FFD700;
+    --white: #fff;
+    --dark-text: #222;
+    --light-gray: #f9f9f9;
+    --nav-height: 60px;
+  }
+
+  /* Basic Reset */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+  }
+  body {
+    font-family: 'Montserrat', sans-serif;
+    color: var(--gold);
+    background: url('https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdXF1Y2wyMHg3MWdsM2hicDIyOTBoc2F0aGd5MGo5dmRyOWk1MzNvbSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/MBVRgrfOBPeH5zNWJU/giphy.gif') no-repeat center center fixed;
+    background-size: cover;
+    line-height: 1.5;
+    scroll-behavior: smooth;
+  }
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  ul {
+    list-style: none;
+  }
+  button {
+    font-family: inherit;
+    cursor: pointer;
+  }
+
+  /* Navigation Bar */
+  nav {
+    position: sticky;
+    top: 0;
+    background: var(--dark-blue);
+    height: var(--nav-height);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 200;
+  }
+  nav .logo {
+    font-weight: 900;
+    font-size: 1.4rem;
+    color: var(--gold);
+    letter-spacing: 3px;
+    user-select: none;
+  }
+  nav ul {
+    display: flex;
+    gap: 2rem;
+  }
+  nav ul li {
+    font-weight: 600;
+    font-size: 1rem;
+    position: relative;
+    padding: 6px 0;
+  }
+  nav ul li a {
+    transition: color 0.3s ease;
+  }
+  nav ul li:hover a,
+  nav ul li.active a {
+    color: var(--gold);
+  }
+  nav ul li:hover::after,
+  nav ul li.active::after {
+    opacity: 1;
+  }
+  nav ul li::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -3px;
+    height: 3px;
+    background: var(--gold);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  /* Main container */
+  .container {
+    max-width: 900px;
+    margin: 3rem auto 4rem auto;
+    padding: 0 1.5rem;
+  }
+
+  /* Section headers */
+  section h2 {
+    color: var(--gold);
+    font-size: 2rem;
+    margin-bottom: 1.6rem;
+    border-bottom: 3px solid var(--gold);
+    padding-bottom: 0.3rem;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+
+  /* Experience Cards Grid */
+  #experience-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(280px,1fr));
+    gap: 1.8rem;
+  }
+
+  /* Individual Card */
+  .exp-card {
+    background: var(--dark-blue);
+    padding: 1.6rem 1.8rem;
+    border-radius: 14px;
+    box-shadow: 0 10px 20px rgb(0 0 0 / 0.07);
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    opacity: 0;
+    transform: translateX(-40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .exp-card.visible {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  .exp-card:hover {
+    box-shadow: 0 18px 35px rgba(240, 185, 34, 0.47);
+    transform: translateX(0) scale(1.03);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+  }
+
+  .exp-card h3 {
+    font-size: 1.3rem;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+  .exp-card span {
+    font-weight: 600;
+    color: #FFD700;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+  .exp-card p {
+    flex-grow: 1;
+    font-size: 1rem;
+    color: #FFD700;
+    margin-bottom: 1.2rem;
+  }
+
+  .exp-card .read-more {
+    font-weight: 700;
+    color: var(--gold);
+    align-self: flex-start;
+    transition: color 0.3s ease;
+    font-size: 1rem;
+  }
+  .exp-card:hover .read-more {
+    color: #FFD700;
+  }
+
+  /* Modal styles */
+  #modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 500;
+  }
+  #modal-overlay.active {
+    display: flex;
+  }
+  #modal {
+    background: var(--dark-blue);
+    max-width: 700px;
+    width: 90%;
+    padding: 2.2rem 2.5rem;
+    border-radius: 14px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  #modal h3 {
+    font-size: 1.8rem;
+    margin-bottom: 0.8rem;
+    color: var(--gold);
+  }
+  #modal span {
+    color: #FFD700;
+    font-weight: 600;
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 1.5rem;
+  }
+  #modal p {
+    font-size: 1.1rem;
+    color: #FFD700;
+    margin-bottom: 1.8rem;
+  }
+  #modal ul {
+    list-style: disc;
+    margin-left: 1.3rem;
+    margin-bottom: 1.8rem;
+  }
+  #modal ul li {
+    margin-bottom: 0.5rem;
+  }
+  #modal button.close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--gold);
+    border: none;
+    color: var(--dark-blue);
+    font-weight: 900;
+    font-size: 1.3rem;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  #modal button.close-btn:hover {
+    background: #FFD700;
+  }
+
+  /* Responsive */
+  @media(max-width: 720px) {
+    nav {
+      padding: 0 1rem;
+    }
+    nav ul {
+      gap: 1rem;
+    }
+    .container {
+      padding: 0 1rem;
+    }
+    #experience-cards {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+    .exp-card {
+      padding: 1.4rem 1.6rem;
+    }
+    /* Landing / Laptop animation Container */
+#landing {
+    height: calc(100vh - var(--nav-height));
+    background: linear-gradient(135deg, #003366, #66ccff); /* Dark blue to light blue */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: visible;
+    color: var(--gold); /* Change text color to gold */
+    text-align: center;
+}
+
+/* Laptop Container */
+#laptop-animation {
+    width: 300px;
+    height: 210px;
+    position: relative;
+    perspective: 1000px;
+    margin-bottom: 25px;
+}
+
+/* Laptop base */
+.laptop-base {
+    width: 280px;
+    height: 30px;
+    background: #1a1a1a; /* Darker base color */
+    border-radius: 0 0 20px 20px;
+    box-shadow:
+        inset 0 -7px 14px rgba(0,0,0,0.12),
+        0 6px 9px rgba(0,0,0,0.3);
+    position: absolute;
+    bottom: 0;
+    left: 10px;
+    z-index: 1;
+}
+
+/* Laptop keyboard */
+.keyboard {
+    width: 260px;
+    height: 16px;
+    background: #333; /* Darker keyboard color */
+    border-radius: 4px;
+    box-shadow: inset 0 2px 4px #66ccff; /* Light blue shadow */
+    margin: 0 auto;
+    position: absolute;
+    bottom: 7px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+}
+
+/* Laptop screen container (hinge) */
+#screen-wrapper {
+    width: 280px;
+    height: 180px;
+    background: #1a1a1a; /* Darker screen color */
+    border-radius: 12px 12px 0 0;
+    box-shadow:
+        0 6px 18px rgba(0,0,0,0.25);
+    margin: 0 auto;
+    position: relative;
+    transform-origin: bottom center;
+    transform-style: preserve-3d;
+    backface-visibility: hidden;
+    cursor: default;
+    user-select: none;
+    box-sizing: border-box;
+    border: 5px solid #66ccff; /* Light blue border */
+}
+
+/* Laptop screen content background */
+#screen-content {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #003366, #66ccff); /* Dark blue to light blue */
+    border-radius: 7px;
+    overflow: hidden;
+    color: #FFD700; /* Gold text color */
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    text-shadow: 0 0 7px rgba(0,0,0,0.5);
+}
+
+/* Laptop opening/closing animation */
+.opening {
+    animation: open-laptop 2.2s forwards;
+}
+.closing {
+    animation: close-laptop 2.2s forwards;
+}
+
+@keyframes open-laptop {
+    0% { transform: rotateX(90deg) translateZ(-50px);}
+    50% { transform: rotateX(35deg) translateZ(20px);}
+    100% { transform: rotateX(0deg) translateZ(0);}
+}
+
+@keyframes close-laptop {
+    0% { transform: rotateX(0deg) translateZ(0);}
+    50% { transform: rotateX(35deg) translateZ(20px);}
+    100% { transform: rotateX(90deg) translateZ(-50px);}
+}
+
+/* Hero title in laptop screen */
+#screen-content h1 {
+    font-size: 1.7rem;
+    text-align: center;
+    letter-spacing: 4px;
+    user-select: none;
+    font-family: 'Montserrat', sans-serif;
+}
+#screen-content p {
+    margin-top: 8px;
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 1.5px;
+    font-style: italic;
+}
+
+/* Contact links under laptop */
+#contact-links {
+    margin-top: 30px;
+    display: flex;
+    gap: 18px;
+    font-weight: 600;
+}
+#contact-links a {
+    color: var(--gold); /* Gold text color */
+    background: rgba(255, 255, 255, 0.18);
+    padding: 8px 18px;
+    border-radius: 28px;
+    transition: background 0.3s ease;
+    font-size: 1.1rem;
+    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.3);
+}
+#contact-links a:hover {
+    background: #66ccff; /* Light blue on hover */
+    box-shadow: 0 0 12px #66ccff; /* Light blue shadow on hover */
+    color: var(--white);
+}
+
+  }
+</style>
+</head>
+<body>
+
+<nav role="navigation" aria-label="Primary Navigation">
+  <div class="logo" aria-label="Site logo">MD</div>
+  <ul id="nav-list">
+    <li class="active"><a href="#experience">Experience</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="container">
+
+  <main>
+  <section id="about" aria-labelledby="aboutTitle">
+    <h2 id="aboutTitle">About Me</h2>
+    <p>Innovative and detail-oriented professional with hands-on experience in web development, AI, and data analysis. Skilled in building responsive web apps and AI-driven solutions using Python, JavaScript, MongoDB, and ONNX.</p>
+  </section>
+
+<section id="education" aria-labelledby="educationTitle">
+    <h2 id="educationTitle">Education</h2>
+    <article>
+      <h3>Bachelor of Data Science</h3>
+      <span>Symbiosis Skills and Professional University | Aug 2022 - Aug 2025</span>
+    </article>
+  </section>
+
+  <section id="experience" aria-labelledby="experienceTitle">
+    <h2 id="experienceTitle">Professional Experience</h2>
+    <div id="experience-cards">
+
+      <article tabindex="0" class="exp-card" data-id="a3m">
+        <h3>A3M NextGen Pvt. Ltd. — Frontend Dev Intern</h3>
+        <span>Jan 2025 - Present</span>
+        <p>Leading a cross-functional team in developing a generative music application using Python and transformer-based AI.</p>
+        <div class="read-more">Read More &raquo;</div>
+      </article>
+
+      <article tabindex="0" class="exp-card" data-id="marva">
+        <h3>Marva LLM — AI Research & Development Lead</h3>
+        <span>Jun 2023 - Aug 2023</span>
+        <p>Led AI research & development, collaborating on UI/UX and optimizing web apps with MongoDB and Node.js integration.</p>
+        <div class="read-more">Read More &raquo;</div>
+      </article>
+
+      <article tabindex="0" class="exp-card" data-id="vision7">
+        <h3>Vision 7 — AI Intern</h3>
+        <span>Jun 2024 - Aug 2024</span>
+        <p>Worked on responsive web UI development and explored React components alongside JavaScript and MongoDB.</p>
+        <div class="read-more">Read More &raquo;</div>
+      </article>
+
+    </div>
+  </section>
+  
+  <section id="skills" aria-labelledby="skillsTitle">
+    <h2 id="skillsTitle">Skills</h2>
+    <div>
+      <strong>Python (NumPy, Pandas, Matplotlib)</strong>
+      <div style="background:#eee; border-radius:30px; overflow:hidden; height:14px; margin: 0.3rem 0 1.2rem 0;">
+        <div style="width:90%; height:100%; background: linear-gradient(90deg, var(--gold), var(--dark-blue)); border-radius:30px;"></div>
+      </div>
+    </div>
+    <div>
+      <strong>Transformer (TensorFlow, ONNX, PyTorch)</strong>
+      <div style="background:#eee; border-radius:30px; overflow:hidden; height:14px; margin: 0.3rem 0 1.2rem 0;">
+        <div style="width:85%; height:100%; background: linear-gradient(90deg, var(--gold), var(--dark-blue)); border-radius:30px;"></div>
+      </div>
+    </div>
+    <div>
+      <strong>Development: HTML, CSS, Streamlit</strong>
+      <div style="background:#eee; border-radius:30px; overflow:hidden; height:14px; margin: 0.3rem 0 1.2rem 0;">
+        <div style="width:80%; height:100%; background: linear-gradient(90deg, var(--gold), var(--dark-blue)); border-radius:30px;"></div>
+      </div>
+    </div>
+    <h3>Languages</h3>
+    <ul style="display:flex; gap:12px; flex-wrap:wrap; padding-left:0; margin-bottom: 2rem;">
+      <li style="background: linear-gradient(135deg, var(--dark-blue), var(--gold));color: var(--white);padding:0.5rem 1.2rem;border-radius:30px;font-weight:600;">English</li>
+      <li style="background: linear-gradient(135deg, var(--dark-blue), var(--gold));color: var(--white);padding:0.5rem 1.2rem;border-radius:30px;font-weight:600;">Hindi</li>
+      <li style="background: linear-gradient(135deg, var(--dark-blue), var(--gold));color: var(--white);padding:0.5rem 1.2rem;border-radius:30px;font-weight:600;">Marathi</li>
+    </ul>
+    <h3>Soft Skills</h3>
+    <ul style="display:flex; gap:12px; flex-wrap:wrap; padding-left:0;">
+      <li style="background: linear-gradient(135deg, var(--dark-blue), var(--gold));color: var(--white);padding:0.5rem 1.2rem;border-radius:30px;font-weight:600;">Creative & Critical Thinking</li>
+      <li style="background: linear-gradient(135deg, var(--dark-blue), var(--gold));color: var(--white);padding:0.5rem 1.2rem;border-radius:30px;font-weight:600;">Adaptability</li>
+      <li style="background: linear-gradient(135deg, var(--dark-blue), var(--gold));color: var(--white);padding:0.5rem 1.2rem;border-radius:30px;font-weight:600;">Leadership</li>
+      <li style="background: linear-gradient(135deg, var(--dark-blue), var(--gold));color: var(--white);padding:0.5rem 1.2rem;border-radius:30px;font-weight:600;">Innovation & Research</li>
+    </ul>
+  </section>
+
+
+  <section id="contact" aria-labelledby="contactTitle" style="text-align:center;">
+    <h2 id="contactTitle">Contact Me</h2>
+    <p>I'm always open to discussing new opportunities or collaborations.</p>
+    <div><a href="mailto:marilmoon01@gmail.com" style="background: var(--gold);color: var(--dark-blue);padding: 0.9rem 2.4rem;border-radius: 35px; font-weight:700; letter-spacing:1.2px; font-size:1.1rem; box-shadow: 0 4px 15px rgba(255, 215, 0, 0.5); transition: background 0.3s ease;">Get in touch</a></div>
+  </section>
+
+</div>
+</main>
+<!-- Modal -->
+<div id="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">
+  <div id="modal" role="document">
+    <button class="close-btn" aria-label="Close modal">&times;</button>
+    <h3 id="modal-title">Title</h3>
+    <span id="modal-duration"></span>
+    <p id="modal-description"></p>
+    <ul id="modal-details"></ul>
+  </div>
+</div>
+
+<script>
+  // Scroll animation for cards using IntersectionObserver
+  const cards = document.querySelectorAll('.exp-card');
+
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  cards.forEach(card => observer.observe(card));
+
+  // Modal and project details data for cards
+  const projectDetails = {
+    a3m: {
+      title: 'A3M NextGen Pvt. Ltd. — Frontend Dev Intern',
+      duration: 'Jan 2025 - Present',
+      description: 'Leading a cross-functional team of master’s students in developing a generative music application using Python. Spearheading the AI generation module, focusing on building a transformer-based model for music composition (analogous to ChatGPT but for sound). Overseeing integration between app backend APIs and the ONNX-deployed transformer model, ensuring optimized performance and real-time execution. Conducting solo research on identifying Sa and raga patterns in audio signals leveraging signal processing and ML techniques.',
+      details: [
+        'Cross-functional team leadership',
+        'Transformer-based music AI module development',
+        'API and model integration optimization',
+        'Signal processing and ML research on audio'
+      ]
+    },
+    marva: {
+      title: 'Marva LLM — AI Research & Development Lead',
+      duration: 'Jun 2023 - Aug 2023',
+      description: 'Collaborated with UI/UX designers to create responsive web interfaces across mobile and desktop platforms. Developed front-end components using HTML, CSS, JavaScript and explored React for component-based development. Gained exposure to the Node.js ecosystem and MongoDB for database-driven web application development. Contributed to enhancing application speed and user experience by optimizing front-end and back-end integration. Applied AI techniques for automating architectural tasks such as layout generation and structural optimization. Built AI-powered 3D visualizations and VR models for client-facing presentations, enhancing customer engagement. Participated in model testing and validation, ensuring prediction accuracy and performance. Acquired foundational knowledge in AutoCAD, MEP Drawings, and architecture-specific workflows.',
+      details: [
+        'Responsive web UI collaboration',
+        'React & JavaScript component development',
+        'Node.js and MongoDB exposure',
+        'AI-based architectural automation and visualization'
+      ]
+    },
+    vision7: {
+      title: 'Vision 7 — AI Intern',
+      duration: 'Jun 2024 - Aug 2024',
+      description: 'Collaborated with UI/UX designers to create responsive web interfaces for mobile and desktop platforms. Developed front-end components using HTML, CSS, JavaScript and explored React for component-based development. Explored Node.js ecosystem and MongoDB for database-driven web applications.',
+      details: [
+        'Responsive UI design collaboration',
+        'Front-end development and React exploration',
+        'Node.js and MongoDB exploration'
+      ]
+    }
+  };
+
+  // Modal elements
+  const modalOverlay = document.getElementById('modal-overlay');
+  const modal = document.getElementById('modal');
+  const modalTitle = document.getElementById('modal-title');
+  const modalDuration = document.getElementById('modal-duration');
+  const modalDescription = document.getElementById('modal-description');
+  const modalDetails = document.getElementById('modal-details');
+  const closeBtn = modal.querySelector('.close-btn');
+
+  // Laptop animation open on load
+  const laptopScreen = document.getElementById('screen-wrapper');
+  window.addEventListener('load', () => {
+    laptopScreen.classList.remove('closing');
+    laptopScreen.classList.add('opening');
+
+    // Animate skill bars and reveal content after laptop opens
+    setTimeout(() => {
+      revealContent();
+      animateSkills();
+    }, 2200); // same as animation time
+  });
+
+  // Open modal with project details
+  function openModal(projectId) {
+    const project = projectDetails[projectId];
+    if(!project) return;
+
+    modalTitle.textContent = project.title;
+    modalDuration.textContent = project.duration;
+    modalDescription.textContent = project.description;
+
+    modalDetails.innerHTML = '';
+    project.details.forEach(item => {
+      const li = document.createElement('li');
+      li.textContent = item;
+      modalDetails.appendChild(li);
+    });
+
+    modalOverlay.classList.add('active');
+    modalOverlay.focus();
+  }
+
+  // Close modal function
+  function closeModal() {
+    modalOverlay.classList.remove('active');
+  }
+
+  // Click event listener for cards
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      openModal(card.dataset.id);
+    });
+    card.addEventListener('keydown', e => {
+      if(e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        openModal(card.dataset.id);
+      }
+    });
+  });
+
+  // Close modal listeners
+  closeBtn.addEventListener('click', closeModal);
+  modalOverlay.addEventListener('click', e => {
+    if(e.target === modalOverlay) {
+      closeModal();
+    }
+  });
+  // Close modal on Escape key
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+      closeModal();
+    }
+  });
+
+  // Update nav active item on scroll
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('nav ul li');
+
+  window.addEventListener('scroll', () => {
+    let current = '';
+    const scrollY = window.pageYOffset + 80;
+
+    sections.forEach(section => {
+      if(scrollY >= section.offsetTop) {
+        current = section.id;
+      }
+    });
+
+    navLinks.forEach(li => {
+      li.classList.remove('active');
+      const anchor = li.querySelector('a');
+      if(anchor.getAttribute('href') === '#' + current) {
+        li.classList.add('active');
+      }
+    });
+  });
+  
+
+</script>
+
+</body>
+</html>
